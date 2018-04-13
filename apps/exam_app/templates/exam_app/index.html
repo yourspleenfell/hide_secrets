@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'exam_app/css/style.css' %}" media="screen" title="no title"  charset="utf-8">
+        <title>Wishlist | Login or Register</title>
+    </head>
+    <body>
+        <div class="row header">
+            <div class="col-8">
+                <h1>Welcome!</h1>
+            </div>
+            <div class="col-4">
+                {% for message in messages %}
+                    {% if 'success' in message.tags %}
+                        <p>{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row white">
+            <div class="col-6">
+                <h3>Register</h3>
+                <form action="/register" method="post">
+                {% csrf_token %}
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><label for="first_name">First Name: </label></td>
+                                <td><input type="text" name="first_name" placeholder="First name"></td>
+                                {% for message in messages %}
+                                    {% if 'first' in message.extra_tags %}
+                                        <td><span class="error">{{ message }}</span></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td><label for="last_name">Last Name: </label></td>
+                                <td><input type="text" name="last_name" placeholder="Last name"></td>
+                                {% for message in messages %}
+                                    {% if 'last' in message.extra_tags %}
+                                        <td><span class="error">{{ message }}</span></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td><label for="username">Username: </label></td>
+                                <td><input type="text" name="username" placeholder="Alias"></td>
+                                {% for message in messages %}
+                                    {% if 'username' in message.extra_tags %}
+                                        <td><span class="error">{{ message }}</span></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td><label for="email">Email: </label></td>
+                                <td><input type="email" name="email" placeholder="Email"></td>
+                                {% for message in messages %}
+                                    {% if 'email_reg' in message.extra_tags %}
+                                        <td><span class="error">{{ message }}</span></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td><label for="password">Password: </label></td>
+                                <td><input type="password" name="password" placeholder="Password"></td>
+                                {% for message in messages %}
+                                    {% if 'pwd_reg' in message.extra_tags %}
+                                        <td><span class="error">{{ message }}</span></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td><label for="password">Password Confirm: </label></td>
+                                <td><input type="password" name="password_con" placeholder="Confirm password"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><input type="submit" name="register" value="Register" class="submit"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="col-6">
+                <h3>Login</h3>
+                {% for message in messages %}
+                    {% if 'login' in message.extra_tags %}
+                        <p>{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+                <form action="/login" method="post">
+                {% csrf_token %}
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><label for="email">Email: </label></td>
+                                <td><input type="text" name="email" placeholder="Email"></td>
+                                {% for message in messages %}
+                                    {% if 'email_log' in message.extra_tags %}
+                                        <td><span class="error">{{ message }}</span></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td><label for="password">Password: </label></td>
+                                <td><input type="password" name="password" placeholder="Password"></td>
+                                {% for message in messages %}
+                                    {% if 'pwd_log' in message.extra_tags %}
+                                        <td><span class="error">{{ message }}</span></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><input type="submit" name="login" value="Login" class="submit"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

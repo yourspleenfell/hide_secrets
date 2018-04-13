@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'exam_app/css/style.css' %}" media="screen" title="no title"  charset="utf-8">
+        <title>Wishlist | Create Item</title>
+    </head>
+    <body>
+        <div class="row header">
+            <div class="col-10">
+                <h1>Welcome, <a href="/user/{{ request.session.id }}">{{ request.session.name }}</a>!</h1>
+            </div>
+            <div class="col-2">
+                <a href="/dashboard/{{ request.session.id }}">Home</a> | <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <div class="row white">
+            <div class="col-12">
+                <h4>Create a New Item:</h4>
+                <form action="/wish_items/submit/{{ request.session.id }}" method="post">
+                {% csrf_token %}
+                    <table>
+                        <tr>
+                            <td><label for="name">Item/Product: </label></td>
+                            <td><input type="text" name="name" placeholder="Item name here"></td>
+                            {% for message in messages %}
+                                {% if 'product' in message.extra_tags %}
+                                    <td><span class="error">{{ message }}</span></td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="submit" class="submit" value="Add Item"></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

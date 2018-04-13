@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'exam_app/css/style.css' %}" media="screen" title="no title"  charset="utf-8">
+        <title>Wishlist | {{ item.name }}</title>
+    </head>
+    <body>
+        <div class="row header">
+            <div class="col-10">
+                <h1>Welcome, <a href="/user/{{ request.session.id }}">{{ request.session.name }}</a>!</h1>
+            </div>
+            <div class="col-2">
+                <a href="/dashboard/{{ request.session.id }}">Home</a> | <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <div class="row white">
+            <div class="col-12">
+                <a href="/wish_items/add/{{ item.id }}" class="edit">Add to my Wishlist</a>
+                <h4>{{ item.name }}</h4>
+                <p><span class="label">Users who added this product/item to their wishlist:</span></p>
+                <ul>
+                {% for list in wishlists %}
+                    <li><a href="/user/{{ list.user.id }}">{{ list.user.username }}</a></li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
