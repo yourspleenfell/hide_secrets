@@ -109,7 +109,7 @@ class UserManager(models.Manager):
             if not PWD_REGEX.match(pwd):
                 errors['pwd_reg']="Password must contain one capital letter and one number"
             elif pwd != pwd_con:
-            errors['pwd_reg']="Both passwords must match"
+                errors['pwd_reg']="Both passwords must match"
         elif len(pwd) is 0:
             pwd = user.password
         if errors:
