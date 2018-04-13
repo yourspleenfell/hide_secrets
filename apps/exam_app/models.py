@@ -28,7 +28,7 @@ class UserManager(models.Manager):
         elif not NAME_REGEX.match(last):
             errors['last']="Last name can consist of only letters"
         if len(username) < 3:
-            errors['username']="Username must be at least 3 characters"
+            errors['username_reg']="Username must be at least 3 characters"
         if len(email) is 0:
             errors['email_reg']="You must enter an email address"
         elif not EMAIL_REGEX.match(email):
@@ -41,13 +41,23 @@ class UserManager(models.Manager):
             errors['pwd_reg']="Both passwords must match"
         elif not PWD_REGEX.match(pwd):
             errors['pwd_reg']="Password must contain one capital letter and one number"
-        return errors
+        if len(errors) > 0:
+            return (False, errors)
+        else:
+            new_user = self.create (
+                first_name = first,
+                last_name = last,
+                username = username,
+                email = email,
+                password = bcrypt.hashpw(pwd.encode(),bcrypt.gensalt())
+            )
+            return (True, new_user)
     def login_validator(self, postData):
         errors = {}
         username = postData['username']
         pwd = postData['password']
         if len(username) is 0:
-            errors['username_log'] = "Must enter an email address to login"
+            errors['username_log'] = "Must enter a username to login"
             return (False, errors)
         if self.filter(username=username):
             user = self.filter(username=username)
@@ -58,7 +68,7 @@ class UserManager(models.Manager):
                 errors['pwd_log'] = "Incorrect password entered"
                 return (False, errors)
         else:
-            errors['email_log'] = "No user with that email address"
+            errors['username_log'] = "Username not on file"
             return (False, errors)
     def update_validator(self, postData):
         errors = {}
@@ -68,27 +78,48 @@ class UserManager(models.Manager):
         email = postData['email']
         pwd = postData['password']
         pwd_con = postData['password_con']
-        if len(first) < 3:
+        user = self.get(id=postData['id'])
+        if len(first) < 3 and len(first) > 0:
             errors['first']="First name must be at least 3 characters"
-        elif not NAME_REGEX.match(first):
-            errors['first']="First name can consist of only letters"
-        if len(last) < 3:
+            if not NAME_REGEX.match(first):
+                errors['first']="First name can consist of only letters"
+        elif len(first) is 0:
+            first = user.first_name
+            print first
+        if len(last) < 3 and len(last) > 0:
             errors['last']="Last name must be at least 3 characters"
-        elif not NAME_REGEX.match(last):
-            errors['last']="Last name can consist of only letters"
-        if len(username) < 3:
-            errors['username']="Username must be at least 3 characters"
-        if len(email) is 0:
-            errors['email_reg']="You must enter an email address"
-        elif not EMAIL_REGEX.match(email):
-            errors['email_reg']="Email must follow the standard format"
-        if len(pwd) < 8:
+            if not NAME_REGEX.match(last):
+                errors['last']="Last name can consist of only letters"
+        elif len(last) is 0:
+            last = user.last_name
+            print last
+        if len(username) < 3 and len(username) > 0:
+            errors['username']="Last name must be at least 3 characters"
+        elif len(username) is 0:
+            username = user.username
+            print username
+        if len(email) < 3 and len(email) > 0:
+            errors['email']="You must enter a valid email address"
+            if not EMAIL_REGEX.match(email):
+                errors['email']="Email must follow the standard format"
+        elif len(email) is 0:
+            email = user.email
+        if len(pwd) < 8 and len(pwd) > 0:
             errors['pwd_reg']="Password must be at least 8 characters"
+            if not PWD_REGEX.match(pwd):
+                errors['pwd_reg']="Password must contain one capital letter and one number"
         elif pwd != pwd_con:
             errors['pwd_reg']="Both passwords must match"
-        elif not PWD_REGEX.match(pwd):
-            errors['pwd_reg']="Password must contain one capital letter and one number"
-        return errors
+        if errors:
+            return (False, errors)
+        else:
+            user.first_name = first
+            user.last_name = last
+            user.username = username
+            user.email = email
+            user.password = bcrypt.hashpw(pwd.encode(),bcrypt.gensalt())
+            user.save()
+            return (True, user)
 
 class User(models.Model):
     first_name = models.CharField(max_length = 255)

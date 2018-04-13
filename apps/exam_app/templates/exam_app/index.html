@@ -47,9 +47,9 @@
                             </tr>
                             <tr>
                                 <td><label for="username">Username: </label></td>
-                                <td><input type="text" name="username" placeholder="Alias"></td>
+                                <td><input type="text" name="username" placeholder="Username"></td>
                                 {% for message in messages %}
-                                    {% if 'username' in message.extra_tags %}
+                                    {% if 'username_reg' in message.extra_tags %}
                                         <td><span class="error">{{ message }}</span></td>
                                     {% endif %}
                                 {% endfor %}
@@ -100,7 +100,7 @@
                                 <td><input type="text" name="username" placeholder="Username"></td>
                                 {% for message in messages %}
                                     {% if 'username_log' in message.extra_tags %}
-                                        <td><span class="username">{{ message }}</span></td>
+                                        <td><span class="error">{{ message }}</span></td>
                                     {% endif %}
                                 {% endfor %}
                             </tr>

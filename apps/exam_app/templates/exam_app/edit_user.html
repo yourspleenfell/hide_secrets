@@ -25,7 +25,7 @@
                         <tbody>
                             <tr>
                                 <td><label for="first_name">First Name: </label></td>
-                                <td><input type="text" name="first_name" placeholder="First name"></td>
+                                <td><input type="text" name="first_name" placeholder="{{ user.first_name }}"></td>
                                 {% for message in messages %}
                                     {% if 'first' in message.extra_tags %}
                                         <td><span class="error">{{ message }}</span></td>
@@ -34,7 +34,7 @@
                             </tr>
                             <tr>
                                 <td><label for="last_name">Last Name: </label></td>
-                                <td><input type="text" name="last_name" placeholder="Last name"></td>
+                                <td><input type="text" name="last_name" placeholder="{{ user.last_name }}"></td>
                                 {% for message in messages %}
                                     {% if 'last' in message.extra_tags %}
                                         <td><span class="error">{{ message }}</span></td>
@@ -43,7 +43,7 @@
                             </tr>
                             <tr>
                                 <td><label for="username">Username: </label></td>
-                                <td><input type="text" name="username" placeholder="Alias"></td>
+                                <td><input type="text" name="username" placeholder="{{ user.username }}"></td>
                                 {% for message in messages %}
                                     {% if 'username' in message.extra_tags %}
                                         <td><span class="error">{{ message }}</span></td>
@@ -52,7 +52,7 @@
                             </tr>
                             <tr>
                                 <td><label for="email">Email: </label></td>
-                                <td><input type="email" name="email" placeholder="Email"></td>
+                                <td><input type="email" name="email" placeholder="{{ user.email }}"></td>
                                 {% for message in messages %}
                                     {% if 'email_reg' in message.extra_tags %}
                                         <td><span class="error">{{ message }}</span></td>
@@ -78,6 +78,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <input type="hidden" value="{{ user.id }}" name="id"></form>
                 </form>
             </div>
         </div>

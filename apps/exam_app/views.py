@@ -14,34 +14,32 @@ def index(request):
     return render(request, 'exam_app/index.html')
 
 def create_user(request):
-    errors = User.objects.validator(request.POST)
-    if len(errors) > 0:
-        for tag, error in errors.iteritems():
+    user_reg = User.objects.validator(request.POST)
+    if not user_reg[0]:
+        for tag, error in user_reg[1].iteritems():
             messages.error(request, error, extra_tags=tag)
         return redirect('/main')
-    first_name = request.POST['first_name']
-    last_name = request.POST['last_name']
-    username = request.POST['username']
-    email = request.POST['email']
-    password = request.POST['password']
-    pwd_hash = bcrypt.hashpw(password.encode(),bcrypt.gensalt())
-    user = User.objects.create(first_name = first_name, last_name = last_name, username = username, email = email, password = pwd_hash)
-    Wishlist.objects.create(user = user)
-    request.session['id'] =  user.id
-    request.session['name'] = user.first_name + ' ' + user.last_name
-    request.session['username'] = user.username
-    return redirect(reverse('app:user', kwargs={'id': user.id }))
+    else:
+        Wishlist.objects.create(
+            user = user_reg[1],
+        )
+        request.session['id'] =  user_reg[1].id
+        request.session['name'] = user_reg[1].first_name + ' ' + user_reg[1].last_name
+        request.session['username'] = user_reg[1].username
+        return redirect(reverse('app:user', kwargs={'id': user_reg[1].id }))
 
 def login(request):
     user_login = User.objects.login_validator(request.POST)
     if user_login[0]:
         user = user_login[1]
+        print user
         request.session['id'] = user.id
         request.session['name'] = user.first_name + ' ' + user.last_name
         request.session['username'] = user.username
         return redirect(reverse('app:user', kwargs={'id': user.id }))
     elif not user_login[0]:
         for tag, item in user_login[1].iteritems():
+            print tag
             messages.error(request, item, extra_tags=tag)
             return redirect('/main')
 
@@ -128,25 +126,10 @@ def update_user(request, id):
         return redirect(reverse('app:user', kwargs={'id': request.session['id'] }))
 
 def submit_update(request, id):
-    errors = User.objects.update_validator(request.POST)
-    if len(errors) > 0:
-        for tag, error in errors.iteritems():
+    user_update = User.objects.update_validator(request.POST)
+    if not user_update[0]:
+        for tag, error in user_update[1].iteritems():
             messages.error(request, error, extra_tags=tag)
         return redirect(reverse('app:update_user', kwargs={'id': request.session['id'] }))
-    first_name = request.POST['first_name']
-    last_name = request.POST['last_name']
-    username = request.POST['username']
-    email = request.POST['email']
-    password = request.POST['password']
-    pwd_hash = bcrypt.hashpw(password.encode(),bcrypt.gensalt())
-    user = User.objects.get(id=id)
-    user.first_name = first_name
-    user.last_name = last_name
-    user.username = username
-    user.email = email
-    user.password = pwd_hash
-    user.save()
-    request.session['id'] =  user.id
-    request.session['name'] = user.first_name + ' ' + user.last_name
-    request.session['username'] = user.username
-    return redirect(reverse('app:user_list', kwargs={'id': request.session['id'] }))
+    else:
+        return redirect(reverse('app:user_list', kwargs={'id': request.session['id'] }))
