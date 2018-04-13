@@ -44,15 +44,15 @@ class UserManager(models.Manager):
         return errors
     def login_validator(self, postData):
         errors = {}
-        email = postData['email']
+        username = postData['username']
         pwd = postData['password']
-        if len(email) is 0:
-            errors['email_log'] = "Must enter an email address to login"
+        if len(username) is 0:
+            errors['username_log'] = "Must enter an email address to login"
             return (False, errors)
-        if self.filter(email=email):
-            user = self.filter(email=email)
+        if self.filter(username=username):
+            user = self.filter(username=username)
             if bcrypt.checkpw(pwd.encode(),user[0].password.encode()):
-                user = self.get(email=email)
+                user = self.get(username=username)
                 return (True, user)
             else:
                 errors['pwd_log'] = "Incorrect password entered"
