@@ -119,7 +119,8 @@ class UserManager(models.Manager):
             user.last_name = last
             user.username = username
             user.email = email
-            user.password = bcrypt.hashpw(pwd.encode(),bcrypt.gensalt())
+            if pwd != user.password:
+                user.password = bcrypt.hashpw(pwd.encode(),bcrypt.gensalt())
             user.save()
             return (True, user)
 
